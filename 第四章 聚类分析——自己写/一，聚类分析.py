@@ -11,6 +11,12 @@ y_true = raw_data[:, -1]
 # 训练聚类模型
 n_clusters = 3  # 设置聚类数量
 model_kmeans = KMeans(n_clusters=n_clusters, random_state=0)  # 建立聚类模型对象
+'''
+n_clusters==要形成的集群数量以及数量
+random_state==从数据中随机选择k个观测值（行）
+
+'''
+help(KMeans)
 model_kmeans.fit(X)  # 训练聚类模型
 y_pre = model_kmeans.predict(X)  # 预测聚类模型
 
