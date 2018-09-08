@@ -134,14 +134,17 @@ def Outlier():
     sales_data['campaign_fee'] = sales_data['campaign_fee'].replace(33380, sales_data['campaign_fee'].mean())  # 将异常极大值替换为均值
     print ('{:*^60}'.format('transformed data:'))
     print (sales_data.describe().round(2).T.rename(index=name_dict))  # 打印处理完成数据基本描述性信息
-
+Outlier()
 # 分割数据集X和y
 def Split_data():
+    global X , y
     X = sales_data.ix[:, :-1]  # 分割X，这就是特征量
     y = sales_data.ix[:, -1]  # 分割y
+Split_data()
 
 # 模型最优化参数训练及检验
 def Parameter_training():
+    global  model_gbrm,parameters,model_gs
     model_gbr = GradientBoostingRegressor()  # 建立GradientBoostingRegressor回归对象
     parameters = {'loss': ['ls', 'lad', 'huber', 'quantile'],
                   'min_samples_leaf': [1, 2, 3, 4, 5],
@@ -150,9 +153,17 @@ def Parameter_training():
     model_gs.fit(X, y)  # 训练交叉检验模型
     print ('Best score is:', model_gs.best_score_)  # 获得交叉检验模型得出的最优得分
     print ('Best parameter is:', model_gs.best_params_)  # 获得交叉检验模型得出的最优参数
+Parameter_training()
+    '''
+    Best score is: 0.931455506205
+    Best parameter is: {'min_samples_leaf': 3, 'alpha': 0.9, 'loss': 'huber'}
+    
+    '''
+
 
 # 获取最佳训练模型
 def Best_model():
+    global model_best
     model_best = model_gs.best_estimator_  # 获得交叉检验模型得出的最优模型对象
     model_best.fit(X, y)  # 训练最优模型
     plt.style.use("ggplot")  # 应用ggplot自带样式库
@@ -161,9 +172,16 @@ def Best_model():
     plt.plot(np.arange(X.shape[0]), model_best.predict(X), label='predicted y')  # 画出预测变量曲线
     plt.legend(loc=0)  # 设置图例位置
     plt.show()  # 展示图像
+Best_model()
+
 
 # 新数据集预测
 def predition():
     New_X = np.array([[1, 1, 0, 1, 15, 0.5, 177, 0.66, 101, 798]])  # 要预测的新数据记录
     print ('{:*^60}'.format('Predicted orders:'))
     print (model_best.predict(New_X).round(0))  # 打印输出预测值
+    '''
+    *********************Predicted orders:**********************
+    [ 779.]
+    '''
+predition()
